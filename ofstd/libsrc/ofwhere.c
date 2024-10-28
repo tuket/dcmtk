@@ -541,6 +541,23 @@ int OFgetExecutablePath(char* out, int capacity, int* dirname_length)
 
 #endif
 
+
+#elif defined(EMSCRIPTEN)
+
+int OFgetExecutablePath(char* out, int capacity, int* dirname_length)
+{
+  if(capacity < 1)
+    return -1;
+
+  if(out)
+    out[0] = '/';
+
+  if(dirname_length)
+    *dirname_length = 1;
+
+  return 1;
+}
+
 #else
 
 #error unsupported platform
