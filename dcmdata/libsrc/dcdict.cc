@@ -115,6 +115,9 @@ DcmDataDictionary::DcmDataDictionary(OFBool loadBuiltin, OFBool loadExternal)
     skeletonCount(0),
     dictionaryLoaded(OFFalse)
 {
+#if defined(EMSCRIPTEN)
+    loadExternal = false;
+#endif
     reloadDictionaries(loadBuiltin, loadExternal);
 }
 

@@ -98,12 +98,14 @@ int DiPNGPlugin::write(
       }
 
       // setjmp stuff for png lib
+#if !defined(EMSCRIPTEN)
       if( setjmp(png_jmpbuf(png_ptr) ) ) {
         png_destroy_write_struct( &png_ptr, NULL );
         if( row_ptr )  delete[] row_ptr;
         if( text_ptr ) delete[] text_ptr;
         return 0;
       }
+#endif
 
       if( (image->getInternalColorModel() == EPI_Monochrome1) ||
           (image->getInternalColorModel() == EPI_Monochrome2) )

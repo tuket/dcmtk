@@ -192,6 +192,7 @@ OFCondition DJCompressIJG16Bit::encode(
   jerr.instance = this;
   jerr.pub.error_exit = DJEIJG16ErrorExit;
   jerr.pub.emit_message = DJEIJG16EmitMessage;
+#if !defined(EMSCRIPTEN)
   if (setjmp(jerr.setjmp_buffer))
   {
     // the IJG error handler will cause the following code to be executed
@@ -200,6 +201,7 @@ OFCondition DJCompressIJG16Bit::encode(
     jpeg_destroy_compress(&cinfo);
     return makeOFCondition(OFM_dcmjpeg, EJCode_IJG16_Compression, OF_error, buffer);
   }
+#endif
   OFjpeg_create_compress(&cinfo);
 
   // initialize client_data

@@ -173,6 +173,7 @@ int DiJPEGPlugin::write(DiImage *image,
             jerr.instance = this;
             jerr.pub.error_exit = DIEIJG8ErrorExit;
             jerr.pub.output_message = DIEIJG8OutputMessage;
+#if !defined(EMSCRIPTEN)
             if (setjmp(jerr.setjmp_buffer))
             {
                 // the IJG error handler will cause the following code to be executed
@@ -185,6 +186,7 @@ int DiJPEGPlugin::write(DiImage *image,
                 /* return error code */
                 return 0;
             }
+#endif
             jpeg_set_defaults(&cinfo);
             cinfo.optimize_coding = TRUE;
             /* Set quantization tables for selected quality. */

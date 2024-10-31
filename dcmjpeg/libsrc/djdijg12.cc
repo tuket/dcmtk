@@ -235,6 +235,7 @@ OFCondition DJDecompressIJG12Bit::init()
       jerr->instance = this;
       jerr->pub.error_exit = DJDIJG12ErrorExit;
       jerr->pub.emit_message = DJDIJG12EmitMessage;
+#if !defined(EMSCRIPTEN)
       if (setjmp(OFconst_cast(DJDIJG12ErrorStruct *, jerr)->setjmp_buffer))
       {
         // the IJG error handler will cause the following code to be executed
@@ -244,6 +245,7 @@ OFCondition DJDecompressIJG12Bit::init()
         delete OFconst_cast(DJDIJG12SourceManagerStruct *, src);
         return makeOFCondition(OFM_dcmjpeg, EJCode_IJG12_Decompression, OF_error, buffer);
       }
+#endif
     }
     else
     {
@@ -283,6 +285,7 @@ OFCondition DJDecompressIJG12Bit::decode(
 
   if (cinfo==NULL || compressedFrameBuffer==NULL || uncompressedFrameBuffer==NULL) return EC_IllegalCall;
 
+#if !defined(EMSCRIPTEN)
   if (setjmp(OFreinterpret_cast(DJDIJG12ErrorStruct*, cinfo->err)->setjmp_buffer))
   {
     // the IJG error handler will cause the following code to be executed
@@ -291,6 +294,7 @@ OFCondition DJDecompressIJG12Bit::decode(
     cleanup();
     return makeOFCondition(OFM_dcmjpeg, EJCode_IJG12_Decompression, OF_error, buffer);
   }
+#endif
 
   // feed compressed buffer into cinfo structure.
   // The buffer will be activated by the next call to DJDIJG12fillInputBuffer.
